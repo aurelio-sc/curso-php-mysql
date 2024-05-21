@@ -3,9 +3,8 @@
 require 'src/conexao-bd.php';
 require 'src/Modelo/Produto.php';
 require 'src/Repositorio/ProdutoRepositorio.php';
-var_dump($_POST);
-if (isset($_POST['cadastro'])):
-    echo 'foi';
+
+if (isset($_POST['cadastro'])):    
     $produto = new Produto(
         null,
         $_POST['tipo'],

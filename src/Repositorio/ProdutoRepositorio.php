@@ -77,5 +77,31 @@ class ProdutoRepositorio
         $statement->bindValue('preco', $produto->getPreco());
         $statement->bindValue('imagem', $produto->getImagem());
         $statement->execute();
-    }  
+    }
+
+    public function buscar(string $id): ?Produto
+    {
+        $sql = 'SELECT * FROM produtos WHERE id = :id';
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue('id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        $dados = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($dados === false) {
+            return null;
+        }
+        return $this->formarObjeto($dados);
+    }
+
+    public function atualizar(Produto $produto): void
+    {
+        $sql = "UPDATE produtos SET tipo = :tipo, nome = :nome, descricao = :descricao, preco = :preco, imagem = :imagem WHERE id = :id";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue('id', $produto->getId());
+        $statement->bindValue('tipo', $produto->getTipo());
+        $statement->bindValue('nome', $produto->getNome());
+        $statement->bindValue('descricao', $produto->getDescricao());
+        $statement->bindValue('preco', $produto->getPreco());
+        $statement->bindValue('imagem', $produto->getImagem());
+        $statement->execute();
+    }
 }
