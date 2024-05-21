@@ -22,9 +22,12 @@ endif;
       $_POST['tipo'], 
       $_POST['nome'], 
       $_POST['descricao'], 
-      $_POST['preco'],
-      $_POST['imagem']
+      $_POST['preco']
     );
+      if ($_FILES['imagem']['error'] == UPLOAD_ERR_OK):
+        $produtoEditado->setImagem(uniqid() . $_FILES['imagem']['name']);    
+        move_uploaded_file($_FILES['imagem']['tmp_name'], $produtoEditado->getImagemDiretorio());
+      endif;
       $produtoRepositorio->atualizar($produtoEditado);
       header("Location: admin.php");
   endif;
@@ -57,7 +60,7 @@ endif;
     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
   </section>
   <section class="container-form">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       <input type="hidden" name="id" value="<?= $produto->getId() ?>">
 
       <label for="nome">Nome</label>

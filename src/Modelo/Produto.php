@@ -66,4 +66,8 @@ class Produto
         return 'img/' . $this->imagem;
     }
 
+    public function setImagem(string $imagem): void
+    {
+        $this->imagem = $imagem;
+    }
 }

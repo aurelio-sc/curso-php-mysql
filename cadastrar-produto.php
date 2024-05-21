@@ -13,6 +13,11 @@ if (isset($_POST['cadastro'])):
         $_POST['preco']
     );
 
+    if ($_FILES['imagem']['error'] == UPLOAD_ERR_OK):
+        $produto->setImagem(uniqid() . $_FILES['imagem']['name']);    
+        move_uploaded_file($_FILES['imagem']['tmp_name'], $produto->getImagemDiretorio());
+    endif;
+
     $produtoRepositorio = new ProdutoRepositorio($pdo);
     $produtoRepositorio->salvar($produto);
     
@@ -46,7 +51,7 @@ endif;
         <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
     </section>
     <section class="container-form">
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
 
             <label for="nome">Nome</label>
             <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" required>
