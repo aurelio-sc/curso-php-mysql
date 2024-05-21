@@ -47,14 +47,15 @@
       <tbody>
       <?php foreach ($produtos as $produto): ?>      
         <tr>
-          <td><?php echo $produto->getNome(); ?></td>
-          <td><?php echo $produto->getTipo(); ?></td>
-          <td><?php echo $produto->getDescricao(); ?></td>
-          <td><?php echo $produto->getPrecoFormatado(); ?>0</td>
+          <td><?= $produto->getNome(); ?></td>
+          <td><?= $produto->getTipo(); ?></td>
+          <td><?= $produto->getDescricao(); ?></td>
+          <td><?= $produto->getPrecoFormatado(); ?></td>
           <td><a class="botao-editar" href="editar-produto.html">Editar</a></td>
           <td>
-            <form>
-              <input type="button" class="botao-excluir" value="Excluir">
+            <form action="excluir-produto.php" method="GET">
+              <input type="hidden" name="id" value="<?= $produto->getId() ?>">
+              <input type="submit" class="botao-excluir" value="Excluir">
             </form>
           </td>        
         </tr>
