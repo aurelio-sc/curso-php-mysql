@@ -8,22 +8,27 @@ class ProdutoRepositorio
         $this->pdo = $pdo;
     }
 
+    public function formarObjeto($dados): Produto
+    {
+        return new Produto(
+            $dados['id'],
+            $dados['tipo'],
+            $dados['nome'],
+            $dados['descricao'],
+            $dados['preco'],
+            $dados['imagem']
+        );
+    }
+
     public function opcoesCafe(): array
     {
         $sql = 'SELECT * FROM produtos WHERE tipo = "Café" ORDER BY preco';
         $statement = $this->pdo->query($sql);    
         $produtosCafe = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $dadosCafe = array_map(function($cafe) {
-            return new Produto(
-                        $cafe['id'], 
-                        $cafe['tipo'], 
-                        $cafe['nome'],  
-                        $cafe['descricao'], 
-                        $cafe['imagem'], 
-                        $cafe['preco']
-            );
-        }, $produtosCafe);
+        $dadosCafe = array_map(function ($cafe){
+            return $this->formarObjeto($cafe);
+        },$produtosCafe);
         
         return $dadosCafe;
     }
@@ -34,16 +39,9 @@ class ProdutoRepositorio
         $statement = $this->pdo->query($sql);    
         $produtosAlmoco = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $dadosAlmoco = array_map(function($almoco) {
-            return new Produto(
-                        $almoco['id'], 
-                        $almoco['tipo'], 
-                        $almoco['nome'],  
-                        $almoco['descricao'], 
-                        $almoco['imagem'], 
-                        $almoco['preco']
-            );
-        }, $produtosAlmoco);
+        $dadosAlmoco = array_map(function ($almoco){
+            return $this->formarObjeto($almoco);
+        },$produtosAlmoco);
         
         return $dadosAlmoco;
     }
@@ -54,16 +52,9 @@ class ProdutoRepositorio
         $statement = $this->pdo->query($sql);    
         $produtos = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $dados = array_map(function($produto) {
-            return new Produto(
-                        $produto['id'], 
-                        $produto['tipo'], 
-                        $produto['nome'],  
-                        $produto['descricao'], 
-                        $produto['imagem'], 
-                        $produto['preco']
-            );
-        }, $produtos);
+        $dados = array_map(function ($produto){
+            return $this->formarObjeto($produto);
+        },$produtos);
         
         return $dados;
     }
@@ -75,5 +66,16 @@ class ProdutoRepositorio
       $statement->bindValue('id', $id, PDO::PARAM_INT);
       $statement->execute();
     }
-    
+
+    public function salvar(Produto $produto)
+    {
+        $sql = "INSERT INTO produtos (tipo, nome, descricao, preco, imagem) VALUES (:tipo, :nome, :descricao, :preco, :imagem)";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue('tipo', $produto->getTipo());
+        $statement->bindValue('nome', $produto->getNome());
+        $statement->bindValue('descricao', $produto->getDescricao());
+        $statement->bindValue('preco', $produto->getPreco());
+        $statement->bindValue('imagem', $produto->getImagem());
+        $statement->execute();
+    }  
 }
